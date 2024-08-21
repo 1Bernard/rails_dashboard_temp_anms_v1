@@ -1,0 +1,115 @@
+<%= simple_form_for(@role, url: @role.new_record? ? create_role_path : update_role_path(encrypt_value(@role.id)), html: { autocomplete: 'off' }, remote: true) do |f| %>
+  <div id="id04" class="w3-modal info_form">
+    <div class="w3-modal-content w3-animate-right w3-animate-opacity w3-card-4 w3-round-xlarge w3-modal-content_form">
+      <header class="modal__heading">
+        <legend class ="legend-label">
+          <span><%= @role.new_record? ? "New" : "Edit" %> Role</span>
+        </legend>
+        <div onclick="document.getElementById('id04').style.display='none'" class="modal__close">
+          <%= image_tag "svgs/close.svg" %>
+        </div> 
+      </header>
+      
+
+      <div class="w3-modal-content_form-p">
+        <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+        <div class="scroll-container">
+          <div class="row" style= "margin-right: 10px">
+            <div class="col">
+              <%= f.input :name, label: "Name", html5: true, input_html: { id: "name", placeholder: " ", autocomplete: "off", class: "form-control border" } %>
+            </div>
+            <div class="col">
+              <% readonly_attribute = (@role.unique_code == ANMSADM_ROLE_UNIQUE_CODE) ? 'readonly' : nil %>
+              <%= f.input :unique_code, label: "Unique Code", html5: true, input_html: { id: "unique_code", placeholder: " ", autocomplete: "off", class: "form-control border", readonly: readonly_attribute } %>
+            </div>
+            <%= f.input :active_status, as: :hidden, input_html: { value: true } %>
+            <%= f.input :del_status, as: :hidden, input_html: { value: false } %>
+          </div>
+
+          <div class="form-inputs" style= "margin-right: 10px">
+            <p >Permissions</p>
+            <input class="w3-input w3-border w3-padding input-container" style="width: 50%; border-radius: 5px;" type="text" placeholder="Search for class.." id="myInput" onkeyup="subjectClassLookup()">
+            <br>
+            <div class="table-responsive">
+              <table class="table table-hover table-condensed table-bordered" id="myTable">
+                <thead>
+                  <tr class="border-top-0">
+                    <th class="table__head sticky-col">Class</th>
+                    <th class="table__head">Action</th>
+                    <th class="table__head">All <input type="checkbox" onClick="toggleAll(this)" /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @permissions.each_with_index do |permission, index| %>
+                    <tr>
+                      <td class="sticky-col w-100"><%= t("#{permission.subject_class.underscore}") %></td>
+                      <td class="w-100"><%= permission.name %></td>
+                      <td class="w-100">
+                        <%= check_box_tag 'permission_ids[]', permission.id, @associated_permissions.include?(permission.id),
+                          {
+                            array: true,
+                            class: "check_box",
+                            'data-subject-class' => permission.subject_class,
+                            'data-action' => permission.action,
+                            onClick: "toggleRelatedPermissions(this)"
+                          }
+                        %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="submit__form-btn-container">
+          <%= button_tag(type: 'submit', class: "submit__form-button", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" }) do %>
+            Submit
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+<% end %>
+
+
+<script>
+  function toggleAll(source) {
+    checkboxes = document.getElementsByName('permission_ids[]');
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = source.checked;
+    }
+  }
+
+  function toggleRelatedPermissions(checkbox) {
+  var subjectClass = checkbox.dataset.subjectClass;
+  var action = checkbox.dataset.action;
+  var checkboxes = document.querySelectorAll('.check_box[data-subject-class="' + subjectClass + '"]');
+
+    if (action === 'manage') {
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = checkbox.checked;
+      }
+    }
+  }
+
+
+  function subjectClassLookup() {
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = "";
+              } else {
+                  tr[i].style.display = "none";
+              }
+          }
+      }
+  }
+</script>

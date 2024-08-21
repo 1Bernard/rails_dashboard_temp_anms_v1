@@ -1,0 +1,184 @@
+
+<body>
+	<div class="main-wrapper p-6">
+			<div class="header" >
+				<div class="header-title"><%= @page_title || page_title %></div>
+				<ul class="nav user-menu">
+					
+					<div class="notification-profile">
+						<li class="nav-item dropdown noti-dropdown top-relative">
+							<a href="#notifications" class="dropdown-toggle nav-link top-relative" data-toggle="dropdown" onclick = "animateButton(this); return false;"> 
+								<%#= image_tag 'svgs/bell.svg' %> 
+								<span class="badge badge-pill content-relative "><%#= current_user.notifications.unread.count %></span> 
+							</a>
+							<%#= render 'notifications/notifications_dropdown' %>
+						</li>
+						
+						<li class="nav-item dropdown top-relative">
+							<span class="user-img ml-3 dropdown-toggle" data-toggle="dropdown" onclick = "animateButton(this); return false;">				
+								<% if current_user.image_path.present? %>
+									<div class="navbar-profile-image text-black"> 
+										<%=image_tag(current_user.image_path, class:"rounded-image") %>
+									</div>
+								<% else %>
+									<div class="user-profile-image text-black"> 
+										<%= current_user.cap_initials %>
+									</div>
+								<% end %> 
+							</span>
+							
+							<div class="dropdown-menu" >
+								<div class="user-header">
+									<div class="avatar avatar-sm">
+										<% if current_user.image_path.present? %>
+											<%=image_tag(current_user&.image_path, class:"rounded-image") %>
+										<% else %>
+											<div class="user-profile-image text-black"> 
+												<%= current_user.cap_initials %>
+											</div>
+										<% end %>
+									</div>
+									<div class="user-text">
+										<p style="font-weight: bold; margin-bottom:0px;"><%= current_user.fullname%></p>
+										<p style="font-size: small; margin-bottom:0px;"><%= current_user.role.name.downcase%></p>
+									</div>
+								</div>
+									<a><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></a> 
+									<a><%= link_to "Logout", destroy_user_session_path, data: { turbo_method: "delete" }, class: "dropdown-item" %></a> 
+							</div>
+						</li>		
+					</div>
+				</ul>
+			</div>
+		<div class="sidebar open" id="sidebar">
+			<div class="header-left">
+				<div class="logo ">
+					<a href="<%=root_path%>" class="logo-small"> 
+					<%= image_tag 'svgs/logo.svg', width:"40", height:"70"%>
+					<span class="logo-small">Bulk Disbursement</span> 
+					</a>
+				</div>
+				<div class="sidebar-container">
+					<a class="toggle_menu_slidder" id="toggle_menu_slidder" style='cursor: pointer;'> 
+						<%= image_tag 'svgs/bars.svg' %> 
+					</a>
+					<a class="mobile_btn" id="mobile_btn"> 
+						<%= image_tag 'svgs/bars.svg' %> 
+					</a>
+				
+				</div>
+			</div>
+			<div class="sidebar-inner slimscroll">
+				<div id="sidebar-menu" class="sidebar-menu">
+					<ul>
+						<%# if current_user_can?(:list, Dashboard) %>
+							<li class="<%= active_class(root_path) %>"> 
+								<a href="<%=root_path%>">
+								<%= image_tag 'svgs/dashboard.svg'%> 
+								<span><%= t(:dashboard)%></span>
+								</a> 
+							</li>
+						<%# end %>
+						<li class="list-divider"></li>
+						<%# if current_user_can?(:list, PaymentRequest) %>
+							<li class="<%#= active_class(payment_requests_path) %>"> 
+								<a href="<%#= payment_requests_path %>">
+									<%= image_tag 'svgs/transactions.svg'%>
+									<span><%= t(:payment_request).pluralize%></span>
+								</a> 
+							</li>
+						<%# end %>
+						
+						
+						<li class="submenu"> 
+							<a href="payouts#"><%= image_tag 'svgs/mobile-money.svg'%>
+							<span> <%= t(:payouts).pluralize%> </span> <span class="menu-arrow"></span>
+							</a>
+							<ul class="submenu_class" style="display: none;">
+								<%# if current_user_can?(:list, PortalRequest) %>
+									<li class="<%#= active_class(portal_requests_path) %>"> 
+										<a href="<%#= portal_requests_path %>">
+										<%#= image_tag 'svgs/mobile-money.svg'%>
+										<span><%= t(:mobile_money)%></span>
+										</a> 
+									</li>
+								<%# end %>
+								<%# if current_user_can?(:list, EntityService) %>
+									<li class="<%#= active_class(users_path) %>"> 
+										<a href="<%#= users_path %>">
+										<%#= image_tag 'svgs/user.svg', class:"svgs"%>
+										<span><%= t(:bank)%></span>
+										</a> 
+									</li>
+								<%# end %>
+							</ul>
+						</li>
+						<li class="submenu"> 
+							<a href="setups#"><%= image_tag 'svgs/setup.svg'%>
+							<span> <%= t(:setups).pluralize%> </span> <span class="menu-arrow"></span>
+							</a>
+							<ul class="submenu_class" style="display: none;">
+								<%# if current_user_can?(:list, EntityInfo) %>
+									<li class="<%#= active_class(users_path) %>"> 
+										<a href="<%#= users_path %>">
+										<%#= image_tag 'svgs/user.svg', class:"svgs"%>
+										<span><%= t(:client).pluralize%></span>
+										</a> 
+									</li>
+								<%# end %>
+								<%# if current_user_can?(:list, EntityService) %>
+									<li class="<%= text_active_class(users_path) %>"> 
+										<a href="<%= users_path %>">
+										<%#= image_tag 'svgs/user.svg', class:"svgs"%>
+										<span><%= t(:user).pluralize%></span>
+										</a> 
+									</li>
+								<%# end %>
+								<%# if current_user_can?(:list, EntityServiceAccount) %>
+									<li class="<%#= active_class(users_path) %>"> 
+										<a href="<%#= users_path %>">
+										<%#= image_tag 'svgs/user.svg', class:"svgs"%>
+										<span><%= t(:approver).pluralize%></span>
+										</a> 
+									</li>
+								<%# end %>
+
+								<%# if current_user_can?(:list, User) %>
+									<li class="<%#= active_class(users_path) %>"> 
+										<a href="<%#= users_path %>">
+										<%#= image_tag 'svgs/user.svg', class:"svgs"%>
+										<span><%= t(:recipient).pluralize%></span>
+										</a> 
+									</li>
+								<%# end %>
+								<%# if current_user_can?(:list, Role) %>
+									<li class="<%#= active_class(roles_path) %>"> 
+										<a href="<%#= roles_path %>">
+										<%#= image_tag 'svgs/settings.svg'%>
+										<span><%= t(:number_validation).pluralize%></span>
+										</a> 
+									</li>
+								<%# end %>
+								<%# if current_user_can?(:list, Role) %>
+									<li class="<%= text_active_class(roles_path) %>"> 
+										<a href="<%= roles_path %>">
+										<%#= image_tag 'svgs/settings.svg'%>
+										<span><%= t(:role).pluralize%></span>
+										</a> 
+									</li>
+								<%# end %>
+							</ul>
+						</li>
+						
+				</div>
+			</div>
+		</div>
+		<div class="page-wrapper">
+			<div class="container-md">
+        		<%= render 'layouts/messages' %>
+				<%= yield %>
+			</div>
+		</div>
+	</div>
+
+</body>

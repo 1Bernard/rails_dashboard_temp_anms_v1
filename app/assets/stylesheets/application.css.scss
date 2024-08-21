@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+:root {
+  --base-font-size: 0.875rem;
+  --primary-font-size: 1rem;
+  --primary-font-weight: 200;
+  --base-font-weight: 300;
+  --header-font-weight: 700;
+  --header-font-weight: 400;
+  --header-font-size: 1.188rem;
+  --header-text-color: #041420;
+  --sidebar-font-weight: 500;
+  --welcome-text: 2.063rem;
+  --welcome-text-base: 1.5rem;
+  --base-font-style-: "Open Sans", sans-serif;
+  --body-background-color: #F3F4F6;
+  --primary-color: #FFFFFF;
+  --secondary-color: #1DA1F2;
+  --secondary-color-hover: #4ab3f4;
+  --accent-color: #F0F8FE;
+  --background-hover-color: #F3F4F6;
+  --icon-active-color: #000000;
+  --successful-status-color: #359A73;
+  --successful-status-background: #F5FBF8;
+  --sidebar-active-bg-color: #F3F4F6;
+  --sidebar-active-bg-color-hover: #D1D2D6;
+  --sidebar-active-color: #041420;
+  --active-status-color: #1DA1F2;
+  --active-status-background: #EFFCFF;
+  --input-form-border-color: #4ab3f4;
+
+  --blue-hover: #68a2b4;
+  --green-hover: #81b483;
+  --red: #EF5349;
+  --red-hover: #e67171cc;
+  --table-button-border-radius: 7.5rem;
+  --content-border-radius: 0.348rem;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-size: var(--base-font-size);
+  font-family: var(--base-font-style);
+  background-color: var(--body-background-color);
+  height: 100%;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+
+@import "bootstrap";
+@import "select2";
+@import "w3css_rails";
+@import "./style";
+@import "./custom";
+@import "./sign_in";
+@import "./modal";
+@import "./feathericon.min.css.scss";

@@ -1,0 +1,63 @@
+<div class="sign-in__container">
+  <div class="sign-in-left__background"></div>
+  <div class="sign-in-right__background"></div>
+
+  <div class="sign-in__form">
+    <div class="logo__container">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <div class="sign-in-form-content__container">
+      <div class="sign-in-image__container">
+        <%= image_tag 'sign-in-image.png' %>
+      </div>
+
+      <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'sign-in__simple-form' }) do |f| %>
+        <div class="sign-in-inputs__container ">
+          <div class="sign-in__text">
+            <span class="welcome-message">Welcome to Bulk Disbursement</span>
+            <span class="admin-message">Admin Dashboard</span>
+          </div>
+
+          <div class="sign-in__inputs">
+            <div class="form-group w-100 mb-3">
+              <label for="username">Username</label>
+              <div class="input-container form-label w-100">
+                <input type="text" name="<%= f.object_name %>[username]" id="username" autocomplete="off" placeholder="Username" class="w-100">
+                <%#= image_tag('svgs/user.svg', class:'search__icon', style: 'width:1.25rem; height:1.25rem;') %>
+              </div>
+            </div>
+
+            <div class="form-group w-100 mb-3">
+              <label for="password">Password</label>
+              <div class="input-container form-label w-100">
+                <input type="password" name="<%= f.object_name %>[password]" id="password" autocomplete="off" placeholder="Password" class="w-100">
+                <%#= image_tag('svgs/closed_eye.svg', class:'search__icon', id:'toggleEye', style: 'width:1.25rem; height:1.25rem; cursor:pointer;') %>
+              </div>
+            </div>
+
+            <% if devise_mapping.rememberable? -%>
+              <div class="signin__form-flex">
+                <div class="custom-checkbox">
+                  <input type="checkbox" name="<%= f.object_name %>[remember_me]"  id="remember_me">
+                  <label for="remember_me">Remember me</label>
+                </div>
+                
+                  <%= render "devise/shared/links" %>
+              </div>
+            <% end -%>
+
+            <%= button_tag(type: 'submit', class: "signin__form-button", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}  ) do %>
+              Sign In
+            <% end %>
+          </div>
+        </div>
+      
+
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+<%#= render "devise/shared/links" %>

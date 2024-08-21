@@ -1,0 +1,117 @@
+<div id='roles_notification'></div>
+<div id="table">
+  <div id="form"></div>
+  <div id="show-detail"></div>
+  <div class="table-card">
+    <div class="tabs">
+      <div class="left">
+      <%# if current_user_can?(:create, Role) %>
+        <%= link_to new_role_path, class:"cursor-pointer", input_html:{ data: { disable_with: "Please wait..." }}, remote: true, onclick: "animateButton(this); return false;" do %>
+            <div class="add-btn" onclick="animateButton(this)">
+              <span class=""><%= image_tag 'svgs/plus.svg'%></span>
+            </div>
+          <% end %>
+      <%# end %>
+      </div>
+      <div class="right">
+        <div class="select extra-option-btn">
+          <span><%= t(:display) %>:</span>
+          <%= select_tag :count,
+               options_for_select([20, 5, 10, 50, 85, 100, "All"], params[:count]),
+               data: { 
+                 remote: true, 
+                 url: url_for(
+                   controller: :roles, 
+                   action: :index, 
+                   params: { 
+                    filter_main: role_filter_main_params,
+                   }
+                 )
+               } %>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table  class="table">
+        <thead>
+          <tr style="border-bottom:0; font-size: 0.85rem">
+            <th class="table__head sticky-col">S/N </th>
+            <th class="table__head sticky-col">Name </th>
+            <th class="table__head">Unique Code </th>
+            <th class="table__head">Status </th>
+            <th class="table__head">Date </th>
+            <th class="table__head"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @roles.each.with_index(@roles.offset + 1) do |role, index| %>
+            <tr style="font-size:0.85rem";>
+              <td class="sticky-col"><%= index%>.</td>
+              <td class="sticky-col"><%= role.name %></td>
+              <td><%= role.unique_code %></td>
+              <td>
+                <% status = ApplicationHelper.handle_active_class(role&.active_status) %>
+                <span class="<%=status.downcase%>_status">
+                  <%= status %>
+                </span>
+              </td>
+              <td><%= role.created_at.strftime("%F %R") %></td>
+              <td  align="left" style="width: 0%;">
+                <div  class="arrow-dropdown">
+                  <div class="arrow-dropdown cursor-pointer">
+                    <div class="btn">
+                      <%= image_tag 'svgs/more.svg'%>
+                    </div>
+                    <div class="arrow-dropdown-content w-100">
+                    <%# if current_user_can?(:update, Role) %>
+                      <% if role.active_status %>
+                        <%= link_to edit_role_path(encrypt_value(role.id)), class: "dropdown-item", data: { disable_with: "<i class='fa fa-spinner fa-spin' style='color: black;'></i> <span style='color: black;'>wait...</span>" }, remote: true do %>
+                          <%= image_tag 'svgs/pen.svg' %> <span style="color: #6E7079"><%=t(:edit)%></span>
+                        <% end %>
+                        <div class="dropdown-divider"></div>
+                      <% end %>
+                    <%# end %>
+
+                      <%# if current_user_can?(:toggle_status, Role) %>
+                        <%= link_to toggle_status_role_path(encrypt_value(role.id)),
+                                    method: :put, remote: true,
+                                    class: "dropdown-item",
+                                    id: "status-btn-#{index}",
+                                    data: { disable_with: "<i class='fa fa-spinner fa-spin' style='color: black;'></i> <span style='color: black;'>wait...</span>",
+                                            confirm: t(:confirm_action_on_record, action: role.active_status ? 'disable' : 'enable', record: 'Role') } do %>
+                          <% if role.active_status %>
+                            <%= image_tag 'svgs/inactive.svg' %>
+                          <% else %>
+                            <%= image_tag 'svgs/active.svg' %>
+                          <% end %>
+                          <%= role.active_status ?  t(:disable) : t(:enable) %>
+                        <% end %>
+                        
+                      <%# end %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% if @roles.empty? %>
+        <div class="no-data">
+          <%= image_tag 'svgs/icon_container.svg' %>
+          <span>No Data</span>
+            </div>
+      <% end %>
+     <% unless params[:count] == "All" %>
+        <span class="float-end">
+          <%= will_paginate @roles, renderer: WillPaginate::ActionView::BootstrapLinkRenderer, params: { controller: "roles", action: "index",
+                                                                                  page: params[:page], count: params[:count] }, class: "custom-will-paginate", remote: true %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+   loadPaginatedPagesViaAjax()
+</script>

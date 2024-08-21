@@ -1,0 +1,92 @@
+source "https://rubygems.org"
+
+ruby "3.1.2"
+
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.1.3", ">= 7.1.3.4"
+
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
+
+# Use postgresql as the database for Active Record
+gem "pg", "~> 1.1"
+
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails"
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+gem "jbuilder"
+
+# Use Redis adapter to run Action Cable in production
+gem "redis", ">= 4.0.1"
+
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
+
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
+# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# gem "image_processing", "~> 1.2"
+
+group :development, :test do
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ]
+end
+
+group :development do
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
+
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
+
+  gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
+end
+
+group :test do
+  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
+  gem "selenium-webdriver"
+end
+
+gem 'jquery-rails', '~> 4.6'
+gem 'jquery-ui-rails', '~> 7.0'
+gem 'dartsass-sprockets', '~> 3.1'
+gem 'bootstrap', '~> 5.3', '>= 5.3.3'
+gem 'w3css_rails', '~> 4.0'
+gem 'simple_form', '~> 5.3', '>= 5.3.1'
+gem 'rails_layout', '~> 1.0', '>= 1.0.42'
+gem 'devise', '~> 4.9', '>= 4.9.4'
+gem 'cancancan', '~> 3.6', '>= 3.6.1'
+gem 'will_paginate-bootstrap5'#, '~> 0.2.4'
+gem 'will_paginate-bootstrap-style'#, '~> 0.3.0'
+gem 'select2-rails', '~> 4.0', '>= 4.0.13'
+gem 'faraday', '~> 2.10'
+gem 'rubyXL', '~> 3.4', '>= 3.4.27'
+gem 'prawn', '~> 2.5'
+gem 'prawn-table', '~> 0.2.2'
+gem 'dotenv-rails', '~> 3.1', '>= 3.1.2'
+gem 'fusioncharts-rails', '~> 0.0.2'
+gem 'cloudinary', '~> 2.1', '>= 2.1.1'
+gem 'carrierwave', '~> 3.0', '>= 3.0.7'
+gem 'whenever', '~> 1.0', require: false
+gem 'rspec-rails', '~> 6.1', '>= 6.1.3'

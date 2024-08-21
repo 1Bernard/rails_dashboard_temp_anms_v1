@@ -1,0 +1,28 @@
+default: &default
+  adapter: <%= ENV["DB_ADAPTER"] %>
+  encoding: unicode
+  host: <%= ENV["DB_HOST"] %>
+  port: <%= ENV["DB_PORT"] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  reconnect: true
+  prepared_statements: false
+
+development:
+  <<: *default
+  username: <%= ENV['BULKDISBURSEMENT_DB_USER'] %>
+  database: <%= ENV['BULKDISBURSEMENT_DB_NAME'] %>
+  password: <%= ENV['BULKDISBURSEMENT_DB_PASSWORD'] %>
+
+test:
+  <<: *default
+  username: <%= ENV['BULKDISBURSEMENT_DB_USER'] %>
+  database: <%= ENV['BULKDISBURSEMENT_DB_NAME'] %>
+  password: <%= ENV['BULKDISBURSEMENT_DB_PASSWORD'] %>
+
+production:
+  <<: *default
+  database: <%= ENV['BULKDISBURSEMENT_DB_NAME'] %>
+  username: <%= ENV['BULKDISBURSEMENT_DB_USER'] %>
+  password: <%= ENV['BULKDISBURSEMENT_DB_PASSWORD'] %>
+

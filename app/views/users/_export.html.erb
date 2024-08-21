@@ -1,0 +1,57 @@
+<div id="export-form" class="w3-modal info_form">
+  <div class="w3-modal-content w3-animate-right w3-animate-opacity w3-card-4 w3-round-xlarge export-content_form">
+    <header class="modal__heading">
+      <legend class ="legend-label">
+        <span ><%= t(:share)%></span>
+      </legend>
+      <div onclick="document.getElementById('export-form').style.display='none'" class="modal__close">
+        <%= image_tag "svgs/close.svg" %>
+      </div>
+    </header>
+    <div class="scroll-container" style="margin-bottom: 1%; margin-top: 1%; display: flex; flex-direction: column; justify-content: center;">
+      <div class="export-image-container">
+        <% formats = ApplicationHelper.export_formats %>
+        <%= link_to export_users_path(format: formats[:xlsx], data_ids: ids.to_json) do %>
+        <div class="export-image">
+          <div class="light-green">
+            <%= image_tag 'svgs/excel.svg'%>
+          </div>
+          <span>Excel</span>
+        </div>
+        <% end %>
+        <%= link_to export_users_path(format: formats[:csv], data_ids: ids.to_json) do %>
+        <div class="export-image">
+          <div class="light-green">
+            <%= image_tag 'svgs/csv.svg'%>
+          </div>
+          <span>CSV</span>
+        </div>
+        <% end %>
+        <%= link_to export_users_path(format: formats[:pdf], data_ids: ids.to_json) do %>
+        <div class="export-image">
+          <div class="light-red">
+            <%= image_tag 'svgs/pdf.svg'%>
+          </div>
+          <span>PDF</span>
+        </div>
+        <% end %>
+      </div>
+      
+      <div class="export-image-container">
+        <%#= link_to export_users_path(format: formats[:pdf], data_ids: ids.to_json) do %>
+        <div class="export-image">
+          <div class="light-purple"><%#= image_tag 'svgs/teams.svg', class: ""%></div>
+          <span>Teams</span>
+        </div>
+        <%# end %>
+        <%#= link_to exportusers_path(format: formats[:pdf], data_ids: ids.to_json) do %>
+        <div class="export-image">
+          <div class="light-violet"><%#= image_tag 'svgs/office.svg', class: ""%></div>
+          <span>Outlook</span>
+        </div>
+        <%# end %>
+      </div>
+    
+    </div>
+  </div>
+</div>

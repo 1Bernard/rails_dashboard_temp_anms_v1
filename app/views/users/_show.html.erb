@@ -1,0 +1,58 @@
+<div id="detail" class="w3-modal info_form">
+  <div class="w3-modal-content w3-animate-right w3-animate-opacity w3-card-4 w3-round-xlarge w3-modal-content_form">
+    <header class="modal__heading">
+      <legend class="legend-label">
+        <span><%= t(:details) %></span>
+      </legend>
+      <div onclick="document.getElementById('detail').style.display='none'" class="modal__close">
+        <%= image_tag "svgs/close.svg" %>
+      </div>
+    </header>
+
+    <div class="w3-modal-content_form-p">
+      <div class="scroll-container">
+        <div class="details-container">
+          <div class="description">
+            <div class="description-text">
+              <span>Full Name</span>
+              <span><%= @user.firstname %></span>
+            </div>
+            <div class="description-text">
+              <span>Email</span>
+              <span><%= @user.email %></span>
+            </div>
+            <div class="description-text">
+              <span>Username</span>
+              <span><%= @user.username %></span>
+            </div>
+            <div class="description-text">
+              <span>Company:</span>
+              <span>
+                <%# if @user&.entity_info&.name.nil? %>
+                  N/A
+                <%# else %>
+                  <%#= @user&.entity_info&.name %>
+                <%# end %>
+              </span> 
+            </div>
+            <div class="description-text">
+              <span>Status:</span>
+              <% status = ApplicationHelper.handle_active_class(@user&.active_status) %>
+              <span class="<%= status.downcase %>_status">
+                <%= status %>
+              </span>
+            </div>
+            <div class="description-text-last">
+              <span>Role</span>
+              <span><%= @user&.role&.name %></span>
+            </div>
+            <div class="description-text-last">
+              <span><%= t(:date_created) %></span>
+              <span><%= @user.created_at.strftime("%F, %R") %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

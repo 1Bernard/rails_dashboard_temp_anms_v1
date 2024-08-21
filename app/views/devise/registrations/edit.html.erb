@@ -1,0 +1,227 @@
+<%= simple_form_for(@user, url: update_user_path(encrypt_value(@user.id)), input_html: { style: "display: flex; align-items: center; justify-content: center; width: 100%" }, html: { method: :patch }) do |f| %> 
+  <div class="form-inputs table-card-edit w-50" style="display: flex; align-items: center; justify-content: center;" >
+    <header class="modal__heading">
+      <legend class ="legend-label">
+        <span><%= t(:edit) %> <%= t(:profile) %></span>
+      </legend>
+    </header>
+    <div style="padding: 30px">
+      <div>
+        
+        <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+        <div class="modal__top-content mb-4 mt-2">
+          <div class="modal__top-content-first">
+            <div class="modal__top-content-first-image-container">
+              <% is_img_path_present = @user&.image_path&.present? %>
+              <!-- close icon -->
+              <%= image_tag "svgs/image_close.svg", id:"cancelButton", style:"display: #{is_img_path_present ? 'inline-block' : 'none'}; width:30px; height:30px", onclick:"cancelImageSelection()" %>
+              <!-- Placeholder image -->
+              <%= image_tag "svgs/image_placeholder.svg", id: "placeholderImage", style:"display: #{is_img_path_present ? 'none': 'inline-block'}"%>
+              <!-- Image preview -->
+              <%= image_tag(handle_display_image(@user), id: "imagePreview", style: "display: #{(is_img_path_present ? 'inline-block' : 'none')}") %>
+            </div>
+          </div>
+          <div class="modal__top-content-second">
+            <%= f.hidden_field :image_path, value: @user.image_path if is_img_path_present %> <!-- Hidden field for retaining the image_path state -->
+            <%= f.input :image_path, as: :file, label: false, input_html: { class: "border", id: "fileInput", accept: "image/*", style:'display:none;' } %>
+            <span class="image-text">Image</span>
+            <span class="upload-text">Upload image 600x600</span>
+            <span id="chooseImage" style="cursor:pointer; margin-top:20px;" onclick="triggerFileInput()">
+              <span class="choose me-1">Choose </span>
+            </span>
+          </div>
+        </div>
+        
+        <%= generate_divider("Bio") %>
+        <div class="row">
+          <div class="col">
+            <%= f.input :firstname, required: true, autofocus: true, label: "Firstname", placeholder: "First Name", input_html:{class:"form-control"} %>
+          </div>
+          <div class="col">
+            <%= f.input :other_names, autofocus: true, label: "Other Names", placeholder: "Other Names", input_html:{class:"form-control"} %>
+          </div>
+        </div>
+
+        <div class="row">
+          
+          <div class="col">
+            <%= f.input :email, required: true, autofocus: true, label: "Email", placeholder: "Email", input_html:{class:"form-control"} %>
+          </div>
+        </div>
+
+        <%= generate_divider("Auth") %>
+        <div class="row">
+          <div class="col">
+            <%= f.input :username, required: true, autofocus: true, label: "User Name", placeholder: "User Name", input_html:{class:"form-control"} %>
+          </div>
+        </div>
+        <div class="password-toggle-container">
+          <div class="toggle-switch-container mb-3">
+            <span class="toggle-text">Toggle to change password</span>
+            <div class="toggle-switch">
+              <input type="checkbox" id="togglePasswordSwitch" onclick="togglePasswordFieldVisibility()">
+              <label for="togglePasswordSwitch" class="slider"></label>
+            </div>
+          </div>
+          <div class="row password-field-section">
+            <div class="w-100">
+              <%= f.input :password, placeholder: "New Password", label: "New Password", hint: ("leave it blank if you don't want to change it #{@minimum_password_length} characters minimum" if @minimum_password_length), input_html:{id:"password1", autocomplete: 'off', class:"form-control"} %>
+              <%= image_tag('svgs/closed_eye.svg', class: 'positon-input-icon-edit', id: 'toggleEyeCon', style: 'width:1.25rem; height:1.25rem;') %>
+            </div>
+            <div class="w-100">
+              <%= f.input :password_confirmation, placeholder: "Confirm New Password", label: "Confirm New Password", hint: ("leave it blank if you don't want to change it #{@minimum_password_length} characters minimum" if @minimum_password_length), required: true, input_html:{id:"confirmPassword", autocomplete: 'off', class:"form-control"}%>
+              <%= image_tag('svgs/closed_eye.svg', class: 'positon-input-icon-edit', id: 'toggleEye', style: 'width:1.25rem; height:1.25rem;') %>
+            </div>
+            <div>
+              <%= f.input :current_password, placeholder: "Current Password", label: "Current Password", hint: ("leave it blank if you don't want to change it #{@minimum_password_length} characters minimum" if @minimum_password_length), required: true, input_html: {id:"Currentpassword", autocomplete: 'off', class:"form-control" } %>
+              <%= image_tag('svgs/closed_eye.svg', class: 'positon-input-icon-edit', id: 'toggleEyeCurr', style: 'width:1.25rem; height:1.25rem;') %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row w-100 mt-6 ml-1">
+        <div class="col">
+          <%= button_tag(type: 'button', class: "text-white btn back-button w-100", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}, onclick: "window.history.back();") do %>
+            Back
+          <% end %>
+        </div>
+        <div class="col" >
+          <%= button_tag(type: 'submit', class: "submit__form-button w-100", data: {disable_with: "<i class='fa fa-spinner fa-spin'></i>"}  ) do %>
+            Update
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+
+  function togglePasswordFieldVisibility() {
+    const passwordSection = document.querySelector('.password-field-section');
+    const toggleSwitch = document.getElementById('togglePasswordSwitch');
+
+    if (toggleSwitch.checked) {
+      passwordSection.classList.add('visible');
+    } else {
+      passwordSection.classList.remove('visible');
+    }
+  }
+
+$(document).ready(function () {
+
+// password section
+// Initially, hide the password field
+    $("#confirmPassword").attr("type", "password");
+    $("#password1").attr("type", "password");
+
+    // Toggle password visibility when clicking on the image
+    $("#toggleEye").click(function() {
+      var passwordInput = $("#confirmPassword");
+      var currentType = passwordInput.attr("type");
+
+      if (currentType === "password") {
+        passwordInput.attr("type", "text");
+        $("#toggleEye").attr("src", "<%= asset_path('svgs/open_eye.svg') %>");
+      } else {
+        passwordInput.attr("type", "password");
+        $("#toggleEye").attr("src", "<%= asset_path('svgs/closed_eye.svg') %>");
+      }
+    });
+
+    $("#toggleEyeCon").click(function() {
+      var passwordInput = $("#password1");
+      var currentType = passwordInput.attr("type");
+
+      if (currentType === "password") {
+        passwordInput.attr("type", "text");
+        $("#toggleEyeCon").attr("src", "<%= asset_path('svgs/open_eye.svg') %>"); 
+      } else {
+        passwordInput.attr("type", "password");
+        $("#toggleEyeCon").attr("src", "<%= asset_path('svgs/closed_eye.svg') %>");
+      }
+    });
+
+    $("#toggleEyeCurr").click(function() {
+      var passwordInput = $("#Currentpassword");
+      var currentType = passwordInput.attr("type");
+
+      if (currentType === "password") {
+        passwordInput.attr("type", "text");
+        $("#toggleEyeCurr").attr("src", "<%= asset_path('svgs/open_eye.svg') %>"); 
+      } else {
+        passwordInput.attr("type", "password");
+        $("#toggleEyeCurr").attr("src", "<%= asset_path('svgs/closed_eye.svg') %>");
+      }
+    });
+
+});
+
+
+  ///image 
+   function triggerFileInput() {
+      document.getElementById('fileInput').click();
+    }
+
+    // Event listener for file input change
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+    function handleFileSelect(event) {
+      const fileInput = event.target;
+      const placeholderImage = document.getElementById('placeholderImage');
+      const imagePreview = document.getElementById('imagePreview');
+      const cancelButton = document.getElementById('cancelButton');
+
+      if (fileInput.files && fileInput.files[0]) {
+        // Check if the file size is less than or equal to 2MB (2 * 1024 * 1024 bytes)
+        if (fileInput.files[0].size <= 2 * 1024 * 1024) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            // Update image preview source
+            console.info('Updating image preview', e.target.result);
+            imagePreview.src = e.target.result;
+          };
+
+          // Read the selected file as a data URL
+          reader.readAsDataURL(fileInput.files[0]);
+
+          // Hide the placeholder image
+          placeholderImage.style.display = 'none';
+
+          // Show the image preview
+          imagePreview.style.display = 'block';
+
+          // Show the cancel button
+          cancelButton.style.display = 'inline-block';
+        } else {
+          // Display an error message or take appropriate action for exceeding the size limit
+          alert("Image size exceeds 2MB. Please choose a smaller image size");
+          // Reset the file input
+          fileInput.value = '';
+        }
+      }
+    }
+
+    function cancelImageSelection() {
+      const fileInput = document.getElementById('fileInput');
+      const placeholderImage = document.getElementById('placeholderImage');
+      const imagePreview = document.getElementById('imagePreview');
+      const cancelButton = document.getElementById('cancelButton');
+
+      // Reset the file input
+      fileInput.value = '';
+
+      // Show the placeholder image
+      placeholderImage.style.display = 'inline-block';
+
+      // Hide the image preview
+      imagePreview.style.display = 'none';
+
+      // Hide the cancel button
+      cancelButton.style.display = 'none';
+    }
+
+
+</script>

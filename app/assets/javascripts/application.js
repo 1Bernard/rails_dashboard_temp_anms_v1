@@ -1,0 +1,14 @@
+//= require jquery3
+//= require rails-ujs
+//= require popper
+//= require bootstrap
+//= require select2
+//= require fusioncharts/fusioncharts
+//= require fusioncharts/fusioncharts.charts
+//= require fusioncharts/themes/fusioncharts.theme.fint
+//= require pagination
+//= require js/popper.min
+//= require js/bootstrap.min
+//= require js/slimscroll
+//= require js/side-bar-script
+//= require_tree .

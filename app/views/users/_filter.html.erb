@@ -1,0 +1,62 @@
+<%= simple_form_for :filter_main, url: users_path, method: 'get', input_html: { class: 'form-horizontal' }, remote: true do |f| %>
+  <div id="infos_filter" class="w3-modal info_form">
+    <div class="w3-modal-content w3-animate-right w3-animate-opacity w3-card-4 w3-round-xlarge w3-modal-content_form">
+      <header class="modal__heading">
+        <legend class="legend-label">
+          <span><%= t(:filter) %> <%= t(:user).pluralize %></span>
+        </legend>
+        <div onclick="document.getElementById('infos_filter').style.display='none'" class="modal__close">
+          <%= image_tag "svgs/close.svg" %>
+        </div>
+      </header>
+
+      <div class="w3-modal-content_form-p">
+        <div class="scroll-container">
+          <div class="form-content" style="margin-bottom: 1%; margin-top: 1%; display: flex; flex-direction: column; justify-content: center;">
+            <div class="row" style="width: 100%;">
+              <%= f.input :date_range, required: false, label: "Date", input_html: { id: 'date_range_id', placeholder: 'Pick a Date or Date Range', class: "" } %>
+            </div>
+            
+            <div class="row mb-3" style="width: 100%;">
+              <%= f.input :active_status, as: :check_boxes, required: false, label: 'Status', collection: [[t(:active), "true"], [t(:inactive), "false"]] %>  
+              <%= f.input :firstname, html5: true, required: false, label: t(:firstname), prompt: "Select", input_html: { id: "payment_mode_id", class: "w-100 border" } %>
+              <%= f.input :other_names, html5: true, required: false, label: t(:other_names), prompt: "Select", input_html: { id: "payment_mode_id", class: "w-100 border" } %>
+              <%= f.input :username, html5: true, required: false, label: t(:username), prompt: "Select", input_html: { id: "payment_mode_id", class: "w-100 border" } %>
+              <%= f.input :email, html5: true, required: false, label: t(:email), prompt: "Select", input_html: { id: "payment_mode_id", class: "w-100 border" } %>
+
+              <%= f.input :unique_code, collection: @roles, html5: true, required: false, label: t(:role), value_method: :unique_code, label_method: :name, prompt: "Select", input_html: { id: "roles", class: "w-100 border" } %>
+              <%= f.input :entity_info, label: "Company", collection: @company_infos, required: false, label_method: :entity_name, value_method: :assigned_code, selected: @user&.company_info&.assigned_code, prompt: "Select Company", input_html:{ id: "entity-selected", class:"form-control"} %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="submit__form-btn-container mb-4">
+        <%= button_tag(type: 'submit', class: "submit__form-button", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>" }) do %>
+          Submit
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<script>
+  $(document).ready(function() {
+    $('#roles').select2({
+      theme: 'bootstrap-5',
+      tags: false
+    });
+
+    $('#entity-selected').select2({
+      theme: 'bootstrap-5',
+      tags: false
+    });
+
+  });
+
+  $("#date_range_id").flatpickr({
+    mode: "range",
+    dateFormat: "Y-m-d",
+  });
+</script>

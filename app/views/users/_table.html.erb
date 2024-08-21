@@ -1,0 +1,172 @@
+<div id='users_notification'></div>
+<div id="table">
+  <div id="user-form"></div>
+  <div id="filter-users"></div>
+  <div id="show-user"></div>
+  <div id="export-form-modal" style="display: none;"></div>
+  <div class="table-card">
+    <% if  @show_filter_label %>
+      <span style="color: grey; font-weight: bold;"><%= t(:filter_label) %></span>
+    <% end %>
+    <div class="tabs">
+      <div class="left">
+        <%# if current_user_can?(:create, User) %>
+          <%= link_to new_user_path, class:"cursor-pointer", input_html:{ data: { disable_with: "Please wait..." }}, remote: true, onclick: "animateButton(this); return false;" do %>
+            <div class="add-btn" onclick="animateButton(this)">
+              <span class=""><%= image_tag 'svgs/plus.svg'%></span>
+            </div>
+          <% end %>
+        <%# end %>
+      </div>
+      <div class="right">
+        <%# if current_user_can?(:filter, User) %>
+          <%= link_to filter_users_path, class: "extra-option-btn", data: { disable_with: "<i class='fa fa-spinner fa-spin' style='color: black;'></i> <span style='color: black;'>wait...</span>" }, remote: true, onclick: "animateButton(this); return false;" do %>
+            <%= image_tag 'svgs/filter.svg' %> <span><%= t(:filter) %></span>
+          <% end %>
+        <%# end %>
+        <%# if current_user_can?(:export, User) %>
+          <span onclick="prepare_for_export(this)" class="extra-option-btn">
+            <%= image_tag 'svgs/share.svg' %>  <span><%= t(:share) %></span>
+          </span>
+        <%# end %>
+        <div class="select extra-option-btn">
+          <span><%= t(:display) %>:</span>
+          <%= select_tag :count,
+               options_for_select([20, 5, 10, 50, 85, 100, "All"], params[:count]),
+               data: { 
+                 remote: true, 
+                 url: url_for(
+                   controller: :users, 
+                   action: :index, 
+                   params: { 
+                    filter_main: user_filter_main_params,
+                   }
+                 )
+               } %>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table  class="table">
+        <thead>
+          <tr  style="border-bottom:0; font-size: 0.85rem">
+            <th class="table__head sticky-col">S/N </th>
+            <th class="table__head sticky-col">Name </th>
+            <th class="table__head">Username </th>
+            <th class="table__head">Email </th>
+           <th class="table__head">Role </th>
+            <th class="table__head">Status </th>
+            <th class="table__head">Date </th>
+            <th class="table__head"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each.with_index(@users.offset + 1) do |user, index| %>
+            <tr style="font-size:0.85rem";>
+              <td class="sticky-col"><%= index%>.</td>
+              <td class="sticky-col" >
+                <div style="display: flex; align-items: center; gap:10px">
+                  <div class="user-profile-image text-black">
+                    <% if user.image_path.present?%>
+                      <%=image_tag(user&.image_path, class:"rounded-image") %>
+                    <% else %>
+                      <%= user.cap_initials %>
+                    <% end %>
+                    
+                  </div>
+                  <%= user.firstname %>
+                </div>
+              </td>
+              <td><%= user.username %></td>
+              <td><%= user.email %></td>
+             <td><%= user.role&.name %></td>
+              <td>
+                <% status = user.active_status %>
+                <span class="<%=ApplicationHelper.handle_active_class(status).downcase%>_status">
+                  <%= ApplicationHelper.handle_active_class(status) %>
+                </span>
+              </td>
+              <td><%= user.created_at.strftime("%F %R") %></td>
+              <td  align="left" style="width: 0%;">
+                <div  class="arrow-dropdown">
+                  <div class="arrow-dropdown cursor-pointer">
+                    <div class="btn">
+                      <%= image_tag 'svgs/more.svg'%>
+                    </div>
+                    <div class="arrow-dropdown-content w-100">
+                      <%# if current_user_can?('show', 'User') %>
+                        <%= link_to show_user_path(encrypt_value(user.id)), class: "dropdown-item", data: { disable_with: "<i class='fa fa-spinner fa-spin' style='color: black;'></i> <span style='color: black;'>wait...</span>" }, remote: true do %>
+                          <%= image_tag 'svgs/notes.svg' %> <span style="color: #6E7079"><%=t(:view)%></span>
+                        <% end %>
+                      <%# end %>
+                      
+                      <%# if current_user_can?(:update, User) %>
+                        <% if status %>
+                          <div class="dropdown-divider"></div>
+                          <%= link_to edit_user_path(encrypt_value(user.id)), class: "dropdown-item", data: { disable_with: "<i class='fa fa-spinner fa-spin' style='color: black;'></i> <span style='color: black;'>wait...</span>" }, remote: true do %>
+                            <%= image_tag 'svgs/pen.svg' %> <span style="color: #6E7079"><%=t(:edit)%></span>
+                          <% end %>
+                        <% end %>
+                        <div class="dropdown-divider"></div>
+                        <%# end %>
+                      <%# if current_user_can?('toggle_status', 'User') %>
+                        <%= link_to toggle_status_user_path(encrypt_value(user.id)),
+                                    method: :put, remote: true,
+                                    class: "dropdown-item",
+                                    id: "status-btn-#{index}",
+                                    data: { 
+                                            disable_with: "<i class='fa fa-spinner fa-spin' style='color: black;'></i> <span style='color: black;'>wait...</span>" ,
+                                            confirm: t(:confirm_action_on_record, action: status ? 'disable' : 'enable', record: 'User') 
+                                          } do %>
+                          
+                          <%= image_tag status ? 'svgs/inactive.svg' : 'svgs/active.svg' %>
+                          <%= status ? t(:disable) : t(:enable) %>
+                        <% end %>
+                        <div class="dropdown-divider"></div>
+                      <%# end %>
+                      <%# if current_user_can?('delete', 'User') %>
+                        <%= link_to delete_user_path(encrypt_value(user.id)), method: :delete, data: { disable_with: "Please wait..." , confirm: t(:confirm_action_on_record, action: 'delete', record: 'User')}, class: "dropdown-item", style: "color: red;", remote: true do %>
+                                <%= image_tag 'svgs/delete.svg' %> <span style="color: #6E7079"><%=t(:delete)%></span>
+                        <% end %>
+                      <%# end %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <% if @users.empty? %>
+        <div class="no-data">
+          <%= image_tag 'svgs/icon_container.svg' %>
+          <span>No Data</span>
+          <span>This section currently has no data.</span>
+            </div>
+      <% end %>
+     <% unless params[:count] == "All" %>
+        <span class="float-end">
+          <%= will_paginate @users, renderer: WillPaginate::ActionView::BootstrapLinkRenderer, params: { :controller => "users", :action => "index",
+                                                                                  page: params[:page], count: params[:count] }, class: "custom-will-paginate", remote: true %>
+        </span>
+      <% end %>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+   loadPaginatedPagesViaAjax()
+
+
+  function prepare_for_export(element){
+   
+    // Render the partial directly
+    document.getElementById('export-form-modal').innerHTML = `<%= j render(partial: 'users/export', locals: { ids: @users.pluck(:id).map { |id| encrypt_value(id) } }) %>`;
+    document.getElementById('export-form-modal').style.display = 'block';
+    
+    animateButton(element); 
+    return false;
+  }
+</script>

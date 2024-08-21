@@ -1,0 +1,2 @@
+class PermissionsRole < ApplicationRecord
+end

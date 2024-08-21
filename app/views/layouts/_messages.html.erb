@@ -1,0 +1,16 @@
+<% flash.each do |name, msg| %>
+  <% if msg.is_a?(String) %>
+    <%= content_tag :div, msg, class: "flash_#{name} flash-message p-3 mb-3 rounded", id: "flash_#{name}" %>
+    <script>
+      setTimeout(function() {
+        var flashMessage = document.getElementById('flash_<%= name %>');
+        flashMessage.style.opacity = 0;
+        flashMessage.style.transition = 'opacity 1s';
+
+        setTimeout(function() {
+          flashMessage.style.display = 'none';
+        }, 1000);
+      }, 4000); 
+    </script>
+  <% end %>
+<% end %>
